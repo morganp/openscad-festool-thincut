@@ -8,7 +8,7 @@ thin leg lying in the workpiece plane. The inner end face of that leg is the
 stop. Butt the workpiece edge against it and the strip under the rail is
 exactly `cut_offset` (default 165mm) wide, cut after cut.
 
-Version 0.3.0 ([Semantic Versioning 2.0.0](https://semver.org)).
+Version 0.4.0 ([Semantic Versioning 2.0.0](https://semver.org)).
 
 ![jig](images/festool_thincut.png)
 
@@ -41,8 +41,9 @@ Looking along the rail. Cutting edge on the left, back edge on the right.
 - So the one dimension that sets the strip width is **cutting edge to the
   T-slot centreline**. Measure it and enter it as `slot_c_from_cut_measured`.
   Everything else derives from it.
-- The under leg must be thinner than the workpiece (`under_t + under_clr`),
-  otherwise it holds the rail off the work.
+- The under leg is made from `material_t` (thickness of the stock being
+  cut) minus `under_clr`, so it stands on the bench and supports the rail
+  without lifting it.
 
 ## Use
 
@@ -56,12 +57,13 @@ workpiece edge. One jig alone only sets the width at one point.
 
 ## Parameters
 
-The Customizer shows only two parameters:
+The Customizer shows only three parameters:
 
 | Parameter | Default | Range | Meaning |
 |---|---|---|---|
 | `cut_offset` | 165 | 10 to 168 | Strip width: rail cutting edge to stop face, embossed on the jig |
 | `jig_len` | 20 | 10 to 100 | Jig length along the rail (print height) |
+| `material_t` | 6.3 | 3 to 50 | Thickness of the stock being cut; sets the under leg |
 
 Everything else sits under `[Hidden]` and is edited in the source. The
 part is centred on the origin by default (`center_on_bed = true`); set it
@@ -75,7 +77,6 @@ false to keep rail coordinates for the `show_rail` / `show_workpiece` ghosts.
 | `cut_offset` | 165 | Cutting edge to stop face = strip width, embossed on the bridge top |
 | `offset_trim` | 0 | Fine tune after a test cut, + = wider strip |
 | `jig_len` | 70 | Length along the rail (print height) |
-| `workpiece_t` | 18 | Ghost, and checked against the under leg |
 | `rail_w` | 190 | Cutting edge to aluminium back edge. Calibrated by v0.1.0 test cut |
 | `rail_back_h` | 10.5 | Underside to top face at the back edge. **Measure** |
 | `slot_c_from_back` | 12 | Back edge to slot centreline. **Measure** |
@@ -92,7 +93,7 @@ false to keep rail coordinates for the `show_rail` / `show_workpiece` ghosts.
 | `bridge_t` | 5 | Bridge thickness above the rail |
 | `wall_t` | 6 | Wall outside the back edge |
 | `edge_clr` | 0.5 | Wall to rail back edge |
-| `under_t` | 6 | Under leg thickness. Workpiece must be >= `under_t + under_clr` |
+| `under_t` | derived | `material_t - under_clr` |
 | `under_clr` | 0.3 | Under leg top below the rail underside |
 | `inner_fillet` | 1.0 | Inner corner fillets |
 

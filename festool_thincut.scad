@@ -39,7 +39,7 @@
 //   45 degrees.
 //
 // Units: mm throughout.
-// Version: 0.3.0
+// Version: 0.4.0
 //////////////////////////////////////////////////////////////////////////////
 
 /* [Jig] */
@@ -47,6 +47,9 @@
 cut_offset   = 165;   // [10:1:168]
 // Jig length along the rail in mm (print height).
 jig_len      = 20;    // [10:5:100]
+// Thickness in mm of the material being cut. The leg under the rail is
+// made to match, so it stands on the bench and supports the rail.
+material_t   = 6.3;   // [3:0.1:50]
 
 /* [Hidden] */
 // Everything below is for fitting the jig to the rail. Edit in the source.
@@ -54,7 +57,6 @@ jig_len      = 20;    // [10:5:100]
 // v0.1.0 printed with 160 cut 165 on the real rail, so rail_w was 5 short.
 // rail_w and cut_offset both +5 keep the printed geometry identical.
 offset_trim  = 0;     // mm, + makes the strip wider. Tune after a test cut
-workpiece_t  = 18;    // mm, ghost only, and checked against the leg
 
 part           = "jig";    // [jig, key_test]
 show_rail      = false;    // ghost of the rail section
@@ -96,10 +98,10 @@ bridge_t     = 5;     // mm, bridge thickness above the rail top
 bridge_past  = 4;     // mm, bridge beyond the key towards the cutting edge
 wall_t       = 6;     // mm, vertical leg outside the back edge
 edge_clr     = 0.5;   // mm, wall to rail back edge. Does not locate
-// Under leg: MUST be thinner than the thinnest workpiece minus under_clr,
-// or it holds the rail off the work. 6 suits 12mm and up; use 4 for 6mm ply.
-under_t      = 6;     // mm
+// Under leg: material_t minus under_clr, so its top sits just below the
+// rail and never lifts it. v0.1.0 to v0.3.0 printed 6 thick = material_t 6.3.
 under_clr    = 0.3;   // mm, leg top below rail underside
+under_t      = material_t - under_clr;   // mm
 stop_cham    = 0.5;   // mm, small chamfer at the stop bottom edge
 outer_cham   = 1.5;   // mm, outer corners of the C
 inner_fillet = 1.0;   // mm, inner corners. 0.29*r intrudes, keep < edge_clr/0.29
@@ -139,15 +141,14 @@ x_bridge = slot_c - key_w_max / 2 - bridge_past;   // bridge inner end
 echo(str("slot centre from cutting edge = ", slot_c));
 echo(str("stop face from cutting edge   = ", x_stop));
 echo(str("stop inboard of back edge     = ", rail_w - x_stop));
-echo(str("thinnest workpiece            = ", under_t + under_clr));
+echo(str("under leg thickness           = ", under_t));
 
 assert(x_stop < x_bridge, "stop must lie inboard of the bridge / key");
 assert(x_stop < rail_w - 5, "stop too close to the rail back edge");
 assert(key_style != "T" || key_head_h + key_vclr < slot_under_h,
        "T head does not fit the undercut height");
 assert(neck_w > 1.2, "key neck thinner than a printable wall");
-if (under_t + under_clr > workpiece_t)
-    echo("WARNING: under leg thicker than workpiece, it will lift the rail");
+assert(under_t >= 2, "material_t too thin for a printable under leg");
 
 //////////////////////////////////////////////////////////////////////////////
 // 2D sections
@@ -243,8 +244,8 @@ module ghosts(len) {
     if (show_rail)
         %translate([0, 0, -over]) linear_extrude(len + 2 * over) rail_2d();
     if (show_workpiece)
-        %translate([-30, -workpiece_t, -over])
-            cube([x_stop + 30, workpiece_t, len + 2 * over]);
+        %translate([-30, -material_t, -over])
+            cube([x_stop + 30, material_t, len + 2 * over]);
 }
 
 //////////////////////////////////////////////////////////////////////////////

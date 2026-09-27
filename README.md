@@ -8,7 +8,7 @@ thin leg lying in the workpiece plane. The inner end face of that leg is the
 stop. Butt the workpiece edge against it and the strip under the rail is
 exactly `cut_offset` (default 165mm) wide, cut after cut.
 
-Version 0.2.0 ([Semantic Versioning 2.0.0](https://semver.org)).
+Version 0.3.0 ([Semantic Versioning 2.0.0](https://semver.org)).
 
 ![jig](images/festool_thincut.png)
 
@@ -56,10 +56,22 @@ workpiece edge. One jig alone only sets the width at one point.
 
 ## Parameters
 
+The Customizer shows only two parameters:
+
+| Parameter | Default | Range | Meaning |
+|---|---|---|---|
+| `cut_offset` | 165 | 10 to 168 | Strip width: rail cutting edge to stop face, embossed on the jig |
+| `jig_len` | 20 | 10 to 100 | Jig length along the rail (print height) |
+
+Everything else sits under `[Hidden]` and is edited in the source. The
+part is centred on the origin by default (`center_on_bed = true`); set it
+false to keep rail coordinates for the `show_rail` / `show_workpiece` ghosts.
+
 | Parameter | Default | Meaning |
 |---|---|---|
 | `part` | `"jig"` | `"jig"` or `"key_test"` (15mm slice of the key) |
-| `show_rail`, `show_workpiece` | true | Ghosts for preview, not exported |
+| `show_rail`, `show_workpiece` | false | Ghosts for preview, not exported |
+| `center_on_bed` | true | Part centred on the origin |
 | `cut_offset` | 165 | Cutting edge to stop face = strip width, embossed on the bridge top |
 | `offset_trim` | 0 | Fine tune after a test cut, + = wider strip |
 | `jig_len` | 70 | Length along the rail (print height) |

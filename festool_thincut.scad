@@ -16,7 +16,7 @@
 //  ======================== workpiece =========|STOP______________| |
 //  ============================================|  under leg        |
 //                                              ^
-//                                     x = cut_offset (160)
+//                                     x = cut_offset (165)
 //
 //   The jig hooks a key into the T-slot on the TOP face at the rail back
 //   edge, wraps down the outside of the back edge, and returns UNDER the
@@ -39,24 +39,29 @@
 //   45 degrees.
 //
 // Units: mm throughout.
-// Version: 0.2.1
+// Version: 0.3.0
 //////////////////////////////////////////////////////////////////////////////
 
-/* [Part] */
-part           = "jig";    // [jig, key_test]
-show_rail      = true;     // ghost of the rail section
-show_workpiece = true;     // ghost of the workpiece and strip
-center_on_bed  = false;    // true: part centred on the origin, rail coords lost
+/* [Jig] */
+// Strip width in mm: rail cutting edge to the stop. Embossed on the jig.
+cut_offset   = 165;   // [10:1:168]
+// Jig length along the rail in mm (print height).
+jig_len      = 20;    // [10:5:100]
 
-/* [Cut] */
+/* [Hidden] */
+// Everything below is for fitting the jig to the rail. Edit in the source.
+
 // v0.1.0 printed with 160 cut 165 on the real rail, so rail_w was 5 short.
 // rail_w and cut_offset both +5 keep the printed geometry identical.
-cut_offset   = 165;   // mm, cutting edge to stop face = strip width
 offset_trim  = 0;     // mm, + makes the strip wider. Tune after a test cut
-jig_len      = 20;    // mm, length along the rail (print height)
 workpiece_t  = 18;    // mm, ghost only, and checked against the leg
 
-/* [Rail: MEASURE ON REAL RAIL] */
+part           = "jig";    // [jig, key_test]
+show_rail      = false;    // ghost of the rail section
+show_workpiece = false;    // ghost of the workpiece and strip
+center_on_bed  = true;     // false: keep rail coords (x = 0 at cutting edge)
+
+// Rail: MEASURE ON REAL RAIL ----------
 // Cutting edge (trimmed splinter guard) to aluminium back edge.
 // FOG forum: 183 aluminium + 2-3 splinter lip. v0.1.0 test cut (160 set,
 // 165 cut) calibrates it to 190.
@@ -78,7 +83,7 @@ slot_lip_t        = 2.0;   // mm, lip thickness. Estimate
 slot_under_w      = 11.0;  // mm, undercut width. Estimate
 slot_under_h      = 6.0;   // mm, undercut height, FOG: 6mm nut slides in
 
-/* [Key] */
+// Key ----------
 key_style   = "T";   // [T:T key slides on from the rail end, bar:neck only drops in from above]
 key_clr     = 0.25;  // mm per side, sliding fit in the slot
 key_vclr    = 0.3;   // mm, T head below the lip underside
@@ -86,7 +91,7 @@ key_head_h  = 3.0;   // mm, T head height (less than slot_under_h)
 bar_depth   = 1.5;   // mm, bar key reach below the lip underside
 lead_cham   = 1.5;   // mm, lead-in chamfer at both key ends
 
-/* [Body] */
+// Body ----------
 bridge_t     = 5;     // mm, bridge thickness above the rail top
 bridge_past  = 4;     // mm, bridge beyond the key towards the cutting edge
 wall_t       = 6;     // mm, vertical leg outside the back edge
@@ -99,15 +104,14 @@ stop_cham    = 0.5;   // mm, small chamfer at the stop bottom edge
 outer_cham   = 1.5;   // mm, outer corners of the C
 inner_fillet = 1.0;   // mm, inner corners. 0.29*r intrudes, keep < edge_clr/0.29
 
-/* [Label] */
+// Label ----------
 show_label   = true;  // emboss the cut width on the bridge top
 label_size   = 8;     // mm, text height
 label_h      = 0.6;   // mm, emboss height
 
-/* [Key test coupon] */
+// Key test coupon ----------
 key_test_len = 15;    // mm
 
-/* [Hidden] */
 $fn = 64;
 EPS = 0.01;
 

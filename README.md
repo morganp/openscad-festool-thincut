@@ -6,9 +6,9 @@ The jig hooks a key into the T-slot on the **top face at the rail back edge**,
 wraps down the outside of the back edge, and returns **under** the rail as a
 thin leg lying in the workpiece plane. The inner end face of that leg is the
 stop. Butt the workpiece edge against it and the strip under the rail is
-exactly `cut_offset` (default 160mm) wide, cut after cut.
+exactly `cut_offset` (default 165mm) wide, cut after cut.
 
-Version 0.1.0 ([Semantic Versioning 2.0.0](https://semver.org)).
+Version 0.2.0 ([Semantic Versioning 2.0.0](https://semver.org)).
 
 ![jig](images/festool_thincut.png)
 
@@ -29,7 +29,7 @@ Looking along the rail. Cutting edge on the left, back edge on the right.
  ======================== workpiece =======|STOP______________| |
  ==========================================|  under leg        |
                                            ^
-                                  x = cut_offset (160)
+                                  x = cut_offset (165)
 ```
 
 ![section](images/festool_thincut_section.png)
@@ -60,15 +60,15 @@ workpiece edge. One jig alone only sets the width at one point.
 |---|---|---|
 | `part` | `"jig"` | `"jig"` or `"key_test"` (15mm slice of the key) |
 | `show_rail`, `show_workpiece` | true | Ghosts for preview, not exported |
-| `cut_offset` | 160 | Cutting edge to stop face = strip width |
+| `cut_offset` | 165 | Cutting edge to stop face = strip width, embossed on the bridge top |
 | `offset_trim` | 0 | Fine tune after a test cut, + = wider strip |
 | `jig_len` | 70 | Length along the rail (print height) |
 | `workpiece_t` | 18 | Ghost, and checked against the under leg |
-| `rail_w` | 185 | Cutting edge to aluminium back edge. **Measure** |
+| `rail_w` | 190 | Cutting edge to aluminium back edge. Calibrated by v0.1.0 test cut |
 | `rail_back_h` | 10.5 | Underside to top face at the back edge. **Measure** |
 | `slot_c_from_back` | 12 | Back edge to slot centreline. **Measure** |
 | `slot_c_from_cut_measured` | 0 | Overrides the above if > 0. **Best single measurement** |
-| `slot_open_w` | 7.0 | Slot opening between the lips. **Measure** |
+| `slot_open_w` | 8.0 | Slot opening between the lips. v0.1.0 neck was 1mm narrow |
 | `slot_lip_t` | 2.0 | Lip thickness. **Measure** |
 | `slot_under_w` | 11.0 | Undercut width. **Measure** |
 | `slot_under_h` | 6.0 | Undercut height. **Measure** |
@@ -100,5 +100,5 @@ Rail defaults are estimates. See `todo.md` for what to measure.
 ## Files
 
 - `festool_thincut.scad` the model
-- `exports/festool_thincut_v0.1.0.stl`, `exports/festool_thincut_key_test_v0.1.0.stl`
+- `exports/festool_thincut_v0.2.0.stl`, `exports/festool_thincut_key_test_v0.2.0.stl`
 - `images/` renders

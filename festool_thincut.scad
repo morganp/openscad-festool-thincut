@@ -39,7 +39,7 @@
 //   45 degrees.
 //
 // Units: mm throughout.
-// Version: 0.1.0
+// Version: 0.2.0
 //////////////////////////////////////////////////////////////////////////////
 
 /* [Part] */
@@ -48,15 +48,18 @@ show_rail      = true;     // ghost of the rail section
 show_workpiece = true;     // ghost of the workpiece and strip
 
 /* [Cut] */
-cut_offset   = 160;   // mm, cutting edge to stop face = strip width
+// v0.1.0 printed with 160 cut 165 on the real rail, so rail_w was 5 short.
+// rail_w and cut_offset both +5 keep the printed geometry identical.
+cut_offset   = 165;   // mm, cutting edge to stop face = strip width
 offset_trim  = 0;     // mm, + makes the strip wider. Tune after a test cut
-jig_len      = 70;    // mm, length along the rail (print height)
+jig_len      = 20;    // mm, length along the rail (print height)
 workpiece_t  = 18;    // mm, ghost only, and checked against the leg
 
 /* [Rail: MEASURE ON REAL RAIL] */
 // Cutting edge (trimmed splinter guard) to aluminium back edge.
-// FOG forum: 183 aluminium + 2-3 splinter lip. Not verified.
-rail_w            = 185;   // mm
+// FOG forum: 183 aluminium + 2-3 splinter lip. v0.1.0 test cut (160 set,
+// 165 cut) calibrates it to 190.
+rail_w            = 190;   // mm
 // Height from rail underside (incl. grip strips) to top face at the back
 // edge, where the jig bridge sits. Estimate.
 rail_back_h       = 10.5;  // mm
@@ -69,7 +72,7 @@ slot_c_from_back  = 12;    // mm, back edge to slot centreline. Estimate
 // Set to a measured cutting edge to slot centreline distance to override
 // rail_w - slot_c_from_back. 0 = derive.
 slot_c_from_cut_measured = 0;  // mm
-slot_open_w       = 7.0;   // mm, opening between the lips. Estimate
+slot_open_w       = 8.0;   // mm, opening between the lips. v0.1.0 neck 1mm narrow
 slot_lip_t        = 2.0;   // mm, lip thickness. Estimate
 slot_under_w      = 11.0;  // mm, undercut width. Estimate
 slot_under_h      = 6.0;   // mm, undercut height, FOG: 6mm nut slides in
@@ -94,6 +97,11 @@ under_clr    = 0.3;   // mm, leg top below rail underside
 stop_cham    = 0.5;   // mm, small chamfer at the stop bottom edge
 outer_cham   = 1.5;   // mm, outer corners of the C
 inner_fillet = 1.0;   // mm, inner corners. 0.29*r intrudes, keep < edge_clr/0.29
+
+/* [Label] */
+show_label   = true;  // emboss the cut width on the bridge top
+label_size   = 8;     // mm, text height
+label_h      = 0.6;   // mm, emboss height
 
 /* [Key test coupon] */
 key_test_len = 15;    // mm
@@ -201,9 +209,19 @@ module key_3d(len) {
                    y_head_b, y_head_t, len, min(c, key_head_h / 2 - 0.3));
 }
 
+// cut width raised on the bridge top, reads from above with the rail
+// cutting edge towards the viewer
+module label_3d(len) {
+    translate([(x_bridge + x_wall_o) / 2, y_bridge - EPS, len / 2])
+        rotate([-90, 0, 0]) linear_extrude(label_h + EPS)
+            text(str(x_stop), size = label_size, halign = "center",
+                 valign = "center", font = "Liberation Sans:style=Bold");
+}
+
 module thincut_jig(len = jig_len) {
     linear_extrude(len) body_2d();
     key_3d(len);
+    if (show_label) label_3d(len);
 }
 
 module key_test() {

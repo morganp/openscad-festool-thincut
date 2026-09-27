@@ -16,8 +16,8 @@ less slides in the top ("ceiling facing") track (FOG forum). No published
 drawing with slot numbers was reachable.
 - [ ] **Cutting edge to T-slot centreline** (measure to both slot walls,
       average). This sets the strip width. Enter as `slot_c_from_cut_measured`
-- [ ] Cutting edge to aluminium back edge (`rail_w`, guess 185)
-- [ ] Slot opening width between the lips (`slot_open_w`, guess 7.0)
+- [x] Cutting edge to aluminium back edge (`rail_w` 190, from v0.1.0 test cut: 160 set gave 165)
+- [x] Slot opening width (`slot_open_w` 8.0, v0.1.0 neck 1mm narrow, >1mm play OK)
 - [ ] Lip thickness (`slot_lip_t`, guess 2.0)
 - [ ] Undercut width (`slot_under_w`, guess 11.0)
 - [ ] Undercut height (`slot_under_h`, guess 6.0)
@@ -39,3 +39,8 @@ drawing with slot numbers was reachable.
       below the rail line) only if thin strips ride over it
 - [ ] Underside grip strips on the rail may not be at the back edge. If the
       rail rocks, add a pad to the under leg top
+
+## Done (v0.2.0)
+- [x] Key neck 1mm wider (`slot_open_w` 7 to 8)
+- [x] Calibrated: `rail_w` 190, `cut_offset` 165. Stop, wall and bridge sit where v0.1.0 had them relative to the key
+- [x] Cut width (`x_stop`) embossed on the bridge top (`show_label`)

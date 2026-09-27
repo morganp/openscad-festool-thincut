@@ -39,13 +39,14 @@
 //   45 degrees.
 //
 // Units: mm throughout.
-// Version: 0.2.0
+// Version: 0.2.1
 //////////////////////////////////////////////////////////////////////////////
 
 /* [Part] */
 part           = "jig";    // [jig, key_test]
 show_rail      = true;     // ghost of the rail section
 show_workpiece = true;     // ghost of the workpiece and strip
+center_on_bed  = false;    // true: part centred on the origin, rail coords lost
 
 /* [Cut] */
 // v0.1.0 printed with 160 cut 165 on the real rail, so rail_w was 5 short.
@@ -245,10 +246,15 @@ module ghosts(len) {
 //////////////////////////////////////////////////////////////////////////////
 // Output: already in print orientation (section on the bed, Z = rail)
 //////////////////////////////////////////////////////////////////////////////
-if (part == "jig") {
-    thincut_jig();
-    ghosts(jig_len);
-} else if (part == "key_test") {
-    key_test();
-    ghosts(key_test_len);
+// center_on_bed moves the part to the origin (online customizers put
+// the origin mid plate). Placement only, the shape does not change.
+translate(center_on_bed ? [-(x_stop + x_wall_o) / 2, -(y_leg_b + y_bridge) / 2, 0]
+                        : [0, 0, 0]) {
+    if (part == "jig") {
+        thincut_jig();
+        ghosts(jig_len);
+    } else if (part == "key_test") {
+        key_test();
+        ghosts(key_test_len);
+    }
 }
